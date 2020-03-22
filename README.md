@@ -1,6 +1,13 @@
 # Tiny UEFI Hello world
 
-- A Challenge to minimal UEFI applications
+- Challenge for minimal UEFI apps
+
+## THIS VERSION
+
+| App | Size | Remarks |
+| - | - | - |
+| hello | 282 | Hello world|
+| chars | 268 | Probably the smallest app in UEFI |
 
 ## Requirements
 

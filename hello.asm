@@ -8,62 +8,20 @@
 [bits 64]
 [section .text]
 
-%if 1
-    org IMAGE_BASE
-_BEGIN:
-    db 'MZ' ; e_magic - Mark Zbikowski
-    dw 0
-    ; times 0x3C - ($ - $$) db 0
-    ; dd (_PE - _BEGIN) ; e_lfanew
-
-_PE:
-    db 'PE', 0, 0
-    dw 0x8664 ; Machine
-    dw 1 ; NumberOfSections
-    dd 0, 0, 0 ; OBSOLETED
-    dw (_SECTION_HEADER - _OPTIONAL_HEADER) ; SizeOfOptionalHeader
-    dw 0x0022 ; Characteristics - IMAGE_FILE_EXECUTABLE_IMAGE, IMAGE_FILE_LARGE_ADDRESS_AWARE
-
-_OPTIONAL_HEADER:
-    dw 0x020B ; PE32+
-    db 14, 0 ; linker version
-    dd 0, 0, 0 ; SizeOfCode, SizeOfInitializedData, SizeOfUninitializedData - DEPRECATED?
-    dd EfiMain - RVA0 ; AddressOfEntryPoint
-    dd 0 ; BaseOfCode - DEPRECATED?
-    dq IMAGE_BASE ; ImageBase
-    dd 4, 4 ; SectionAlignment | e_lfa_new, FileAlignment
-    dw 6, 0, 0, 0, 6, 0 ; versions
-    dd 0 ; Win32VersionValue - RESERVED
-    dd (_END - _TEXT) + RVA_TEXT, (_END_HEADER - _BEGIN) ; SizeOfImage, SizeOfHeaders
-    dd 0 ; CheckSum
-    dw 0x0A ; Subsystem - IMAGE_SUBSYSTEM_EFI_APPLICATION
-    dw 0x8160 ; DllCharacteristics - _HIGH_ENTROPY_VA, _DYNAMIC_BASE, _NX_COMPAT, _TERMINAL_SERVER_AWARE
-    dq 0x100000, 0x10000, 0x100000, 0x10000 ; SizeOfStackReserve, SizeOfStackCommit, SizeOfHeapReserve, SizeOfHeapCommit
-    dd 0 ; LoaderFlags - RESERVED MBZ
-    dd 6 ; NumberOfRvaAndSizes - 16 formal, 6 OVMF's minimal
-    times 6 dd 0, 0 ; dummy
-
-_SECTION_HEADER:
-    db ".text", 0, 0, 0 ; Name
-    dd (_END - _TEXT), RVA_TEXT ; VirtualSize, VirtualAddress
-    dd (_END - _TEXT), _TEXT - _BEGIN ; SizeOfRawData, PointerToRawData
-    dd 0, 0, 0 ; OBSOLETED
-    dd 0x60000020 ; Characteristics - IMAGE_SCN_CNT_CODE, IMAGE_SCN_MEM_EXECUTE, IMAGE_SCN_MEM_READ
-
-_END_HEADER:
-
-%endif
+%include "header.asm"
 
 _TEXT:
 
     global EfiMain
 EfiMain:
-    sub rsp, byte 0x28
+    enter 0x20, 0
+    ; sub rsp, byte 0x28
     mov rcx, [rdx + 0x40] ; EFI_SYSTEM_TABLE->ConOut
     lea rdx, [rel hello_string]
     call [rcx + 0x08] ; EFI_SIMPLE_OUTPUT_PROTOCOL->OutputString
     xor eax, eax
-    add rsp, byte 0x28
+    leave
+    ; add rsp, byte 0x28
     ret
 
 hello_string:

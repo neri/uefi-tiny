@@ -11,9 +11,9 @@ TARGET = hello.efi chars.efi
 
 all: $(TARGET)
 
-hello.efi: hello.asm
+hello.efi: hello.asm header.asm
 
-chars.efi: chars.asm
+chars.efi: chars.asm header.asm
 
 # mnt/efi/boot:
 # 	mkdir -p $@
@@ -31,4 +31,4 @@ install: all mnt
 	cp $(TARGET) mnt/
 
 run: install var/ovmfx64.fd
-	qemu-system-x86_64 -rtc base=localtime -s -monitor stdio -drive format=raw,file=fat:rw:mnt -bios var/ovmfx64.fd
+	qemu-system-x86_64 -rtc base=localtime -s -nographic -drive format=raw,file=fat:rw:mnt -bios var/ovmfx64.fd
