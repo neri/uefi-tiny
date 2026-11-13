@@ -27,7 +27,13 @@ var:
 var/ovmfx64.fd: var
 	curl -# -L -o $@ https://github.com/retrage/edk2-nightly/raw/master/bin/RELEASEX64_OVMF.fd
 
-install: all mnt
+mnt/efi/boot: mnt
+	mkdir -p $@
+
+mnt/efi/boot/bootx64.efi: mnt/efi/boot
+	curl -# -L -o $@ https://github.com/retrage/edk2-nightly/raw/master/bin/RELEASEX64_Shell.efi
+
+install: all mnt mnt/efi/boot/bootx64.efi
 	cp $(TARGET) mnt/
 
 run: install var/ovmfx64.fd

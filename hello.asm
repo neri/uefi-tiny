@@ -1,7 +1,7 @@
 ;; A Tiny UEFI Hello World
 
 %define u(x) __utf16__(x) 
-%define IMAGE_BASE 0x140000000
+%define IMAGE_BASE 0x400000
 %define RVA_TEXT (_TEXT - _BEGIN)
 %define RVA0 IMAGE_BASE
 
@@ -26,5 +26,8 @@ EfiMain:
 
 hello_string:
     dw u("Hello, world!"), 13, 10, 0
+
+    ; padding
+    times 268 - ($ - _BEGIN) db 0
 
 _END:

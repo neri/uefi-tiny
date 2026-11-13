@@ -6,7 +6,7 @@
 
 | App | Size | Remarks |
 | - | - | - |
-| hello | 282 | Hello world|
+| hello | 268 | Hello world|
 | chars | 268 | Probably the smallest app in UEFI |
 
 ## Requirements
